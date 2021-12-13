@@ -3,6 +3,7 @@ import React from 'react';
 export default function FilmList({ films }) {
   return (
     <section className="films">
+      <h1>FLILMSY</h1>
       {films.map((film) => (
         <div
           className="film"

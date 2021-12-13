@@ -1,6 +1,6 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import { BrowserRouter, NavLink } from 'react-router-dom';
+import { BrowserRouter, NavLink, Switch, Route } from 'react-router-dom';
 
 import CharacterList from './components/Characters/CharacterList';
 import FilmList from './components/Films/FilmList';
@@ -44,7 +44,9 @@ function App() {
       },
     });
     const data = await resp.json();
-    console.log(data);
+    console.log(data.docs);
+    const filmData = [{ name: data.docs.name }];
+    console.log(filmData);
     // Add your code here!
     // 1. Get data using fetch from https://the-one-api.dev/v2/character/
     // 2. Update the response data with the key `dates` which is a combination of
@@ -71,10 +73,14 @@ function App() {
             Characters
           </NavLink>
         </header>
-        {/* <Switch>
-          <Route path="./src/components/Characters/CharacterList.js" />
-          <Route path="./src/components/Films/FilmList.js" />
-        </Switch> */}
+        <Switch>
+          <Route path="./src/components/Characters/CharacterList.js" component={characters}>
+            <FilmList />
+          </Route>
+          <Route path="./src/components/Films/FilmList.js" component={films}>
+            <CharacterList />
+          </Route>
+        </Switch>
       </BrowserRouter>
     </div>
   );
