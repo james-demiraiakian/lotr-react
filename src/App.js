@@ -15,13 +15,22 @@ function App() {
   }, []);
 
   const getFilms = async () => {
-    const resp = await fetch('https://the-one-api.dev/v2/movie/', {
+    const resp = await fetch(`${process.env.REACT_APP_SUPABASE_URL}/rest/v1/films`, {
       headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+        apikey: process.env.REACT_APP_SUPABASE_KEY,
+        Authorization: `Bearer ${process.env.REACT_APP_SUPABASE_KEY}`,
       },
     });
     const data = await resp.json();
-    console.log(data);
+    const filmDataArray = data.map((f) => {
+      return [
+        f.title,
+        f.title.toLowerCase().replace(/\s+/g, '-'),
+        f.box_office_total,
+        f.academy_award_nominations,
+      ];
+    });
+    setFilms(filmDataArray);
     // Add your code here!
     // 1. Get data using fetch from https://the-one-api.dev/v2/movie/ (don't forget to set your header!)
     // 2. Transform the response so that films contains nested arrays of:
@@ -38,15 +47,23 @@ function App() {
   };
 
   const getCharacters = async () => {
-    const resp = await fetch('https://the-one-api.dev/v2/character/', {
+    const resp = await fetch(`${process.env.REACT_APP_SUPABASE_URL}/rest/v1/characters`, {
       headers: {
-        Authorization: `Bearer ${process.env.REACT_APP_API_KEY}`,
+        apikey: process.env.REACT_APP_SUPABASE_KEY,
+        Authorization: `Bearer ${process.env.REACT_APP_SUPABASE_KEY}`,
       },
     });
     const data = await resp.json();
-    console.log(data.docs);
-    const filmData = [{ name: data.docs.name }];
-    console.log(filmData);
+    const charArray = data.map((c) => {
+      return {
+        name: c.name,
+        dates: c.birth + ' - ' + c.death,
+        wikiUrl: `https://en.wikipedia.org/wiki/${c.name}`,
+      };
+    });
+    console.log(charArray);
+    setCharacters(charArray);
+    // const characterDataArray = characterData.map(c);
     // Add your code here!
     // 1. Get data using fetch from https://the-one-api.dev/v2/character/
     // 2. Update the response data with the key `dates` which is a combination of
@@ -74,11 +91,11 @@ function App() {
           </NavLink>
         </header>
         <Switch>
-          <Route path="./src/components/Characters/CharacterList.js" component={characters}>
-            <FilmList />
+          <Route path="/characters">
+            <CharacterList characters={characters} />
           </Route>
-          <Route path="./src/components/Films/FilmList.js" component={films}>
-            <CharacterList />
+          <Route path="/films">
+            <FilmList films={films} />
           </Route>
         </Switch>
       </BrowserRouter>
