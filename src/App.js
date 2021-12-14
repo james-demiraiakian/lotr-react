@@ -61,7 +61,6 @@ function App() {
         wikiUrl: `https://en.wikipedia.org/wiki/${c.name}`,
       };
     });
-    console.log(charArray);
     setCharacters(charArray);
     // const characterDataArray = characterData.map(c);
     // Add your code here!
